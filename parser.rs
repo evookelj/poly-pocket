@@ -15,6 +15,7 @@ use display::clear_screen;
 use display::save_ppm;
 
 use draw::draw_lines;
+use draw::draw_tris;
 use draw::add_curve;
 use draw::add_circle;
 use draw::add_box;
@@ -154,7 +155,8 @@ pub fn parse_file(name: &str, transf: &mut Gmatrix, edges: &mut Gmatrix, screen:
 				}
 				"apply" => transf.edit_mult(edges),
 				"display" => {
-					draw_lines(edges, screen, [255,50,50]);
+					// draw_lines(edges, screen, [255,50,50]);
+					draw_tris(edges, screen, [255,50,50]);
 					disp(screen);
 					clear_screen(screen);
 				}

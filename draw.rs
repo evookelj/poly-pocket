@@ -111,6 +111,32 @@ pub fn draw_lines(gm: &mut Gmatrix, screen: &mut [[[u32; 3]; 500]; 500], color: 
 	}
 }
 
+fn draw_tri(x0: i32, y0: i32, x1: i32, y1: i32, x2: i32, y2: i32, screen: &mut [[[u32; 3]; 500]; 500], color: [u32; 3]) {
+	draw_line(x0,y0,x1,y1,screen,color);
+	draw_line(x0,y0,x2,y2,screen,color);
+	draw_line(x1,y1,x2,y2,screen,color);
+}
+
+pub fn draw_tris(gm: &mut Gmatrix, screen: &mut [[[u32; 3]; 500]; 500], color: [u32; 3]) {
+	let mut i=0;
+	if gm.clen()<1 {
+		return;
+	}
+
+	while i<gm.clen()-2 {
+		draw_tri(
+			gm.get_val(0,i) as i32,
+			gm.get_val(1,i) as i32,
+			gm.get_val(0,i+1) as i32,
+			gm.get_val(1,i+1) as i32,
+			gm.get_val(0,i+2) as i32,
+			gm.get_val(1,i+2) as i32,
+			screen,
+			color);
+		i+=3;
+	}
+}
+
 fn circle_x(t: f32, cx: f32, r: f32) -> f32 {
 	let d = t*360.0;
 	return cx+r*d.to_radians().cos()
@@ -198,20 +224,8 @@ pub fn add_circle(edges: &mut Gmatrix, cx: f32, cy: f32, cz: f32, r: f32) {
 }
 
 pub fn add_box(edges: &mut Gmatrix, x:i32, y:i32, z:i32, w:i32, h:i32, d:i32) {
-	edges.add_edge(x,y,z, x,y,z-d);
-	edges.add_edge(x,y,z-d, x+w,y,z-d);
-	edges.add_edge(x+w,y,z-d, x+w,y,z);
-	edges.add_edge(x+w,y,z, x,y,z);
-
-	edges.add_edge(x,y-h,z, x+w,y-h,z);
-	edges.add_edge(x+w,y-h,z, x+w,y-h,z-d);
-	edges.add_edge(x+w,y-h,z-d, x,y-h,z-d);
-	edges.add_edge(x,y-h,z-d, x,y-h,z);
-
-	edges.add_edge(x,y,z, x,y-h,z);
-	edges.add_edge(x+w,y,z, x+w,y-h,z);
-	edges.add_edge(x,y,z-d, x,y-h,z-d);
-	edges.add_edge(x+w,y,z-d, x+w,y-h,z-d);
+	edges.add_tri(x+w,y,z, x,y,z, x,y-h,z);
+	edges.add_tri(x,y-h,z, x+w,y-h,z, x+w,y,z);
 }
 
 pub fn add_sphere(edges: &mut Gmatrix, cx: f32, cy: f32, cz: f32, r: f32) {

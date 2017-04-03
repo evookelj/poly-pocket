@@ -112,6 +112,13 @@ impl Gmatrix {
 		self.add_pt(x0, y0, z0);
 		self.add_pt(x1, y1, z1);
 	}
+
+	pub fn add_tri(&mut self,x0:i32,y0:i32,z0:i32,
+		x1:i32,y1:i32,z1:i32,x2:i32,y2:i32,z2:i32) {
+		self.add_edge(x0,y0,z0,x1,y1,z1);
+		self.add_edge(x1,y1,z1,x2,y2,z2);
+		self.add_edge(x0,y0,z0,x2,y1,z2);
+	}
 }
 
 pub fn make_trans(x: f32, y: f32, z: f32) -> Gmatrix {

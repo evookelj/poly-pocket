@@ -240,11 +240,22 @@ fn generate_sphere(edges: &mut Gmatrix, cx: f32, cy: f32, cz: f32, r: f32) {
 			edges.add_pt(x,y,z);
 			circ += 0.01
 		}
-		rot += 0.001;
+		rot += 0.01;
 	}
 }
 
 pub fn add_torus(edges: &mut Gmatrix, cx:f32, cy:f32, cz:f32, r1: f32, r2:f32) {
+	let mut torus = Gmatrix::new();
+	generate_torus(&mut torus,cx,cy,cz,r1,r2);
+	for i in 0..torus.clen() {
+		let x = torus.get_val(0,i) as i32;
+		let y = torus.get_val(1,i) as i32;
+		let z = torus.get_val(2,i) as i32;
+		edges.add_edge(x,y,z,x+2,y+2,z+2);
+	}
+}
+
+fn generate_torus(edges: &mut Gmatrix, cx:f32, cy:f32, cz:f32, r1: f32, r2:f32) {
 	let mut rot = 0.0;
 	let mut mrot;
 	while rot<1.0 {
@@ -259,6 +270,6 @@ pub fn add_torus(edges: &mut Gmatrix, cx:f32, cy:f32, cz:f32, r1: f32, r2:f32) {
 			edges.add_edge(x,y,z,x+2,y+2,z+2);
 			circ += 0.01
 		}
-		rot += 0.0025;
+		rot += 0.01;
 	}
 }

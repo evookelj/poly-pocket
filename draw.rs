@@ -254,10 +254,12 @@ pub fn add_sphere(edges: &mut Gmatrix, cx: f32, cy: f32, cz: f32, r: f32, step:f
 	let long_start = 0;
 	let long_stop = n;
 
+	let mut i;
+
 	n += 1;
 	for lat in lat_start..lat_stop {
 		for long in long_start..long_stop {
-			let i = lat*n+long;
+			i = lat*n+long;
 
 			edges.add_tri(
 				circ.get_val(0,i) as i32,

@@ -246,7 +246,7 @@ pub fn add_box(edges: &mut Gmatrix, x:i32, y:i32, z:i32, w:i32, h:i32, d:i32) {
 
 pub fn add_sphere(edges: &mut Gmatrix, cx: f32, cy: f32, cz: f32, r: f32, step:f32) {
 	let mut circ = Gmatrix::new();
-	let mut n = (1.0/step+0.1) as usize;
+	let mut n = (1.0/step) as usize;
 	generate_sphere(&mut circ, cx, cy, cz, r, step);
 
 	let lat_start = 0;
@@ -255,12 +255,12 @@ pub fn add_sphere(edges: &mut Gmatrix, cx: f32, cy: f32, cz: f32, r: f32, step:f
 	let long_stop = n;
 
 	let mut i;
+	n+=1;
 
-	n += 1;
 	for lat in lat_start..lat_stop {
 		for long in long_start..long_stop {
 			i = lat*n+long;
-
+			/*
 			edges.add_tri(
 				circ.get_val(0,i) as i32,
 				circ.get_val(1,i) as i32,
@@ -273,8 +273,8 @@ pub fn add_sphere(edges: &mut Gmatrix, cx: f32, cy: f32, cz: f32, r: f32, step:f
 				circ.get_val(0,i+1+n) as i32,
 				circ.get_val(1,i+1+n) as i32,
 				circ.get_val(2,i+1+n) as i32
-				);
-/*
+				);*/
+
 			edges.add_tri(
 				circ.get_val(0,i) as i32,
 				circ.get_val(1,i) as i32,
@@ -287,7 +287,7 @@ pub fn add_sphere(edges: &mut Gmatrix, cx: f32, cy: f32, cz: f32, r: f32, step:f
 				circ.get_val(0,i+n) as i32,
 				circ.get_val(1,i+n) as i32,
 				circ.get_val(2,i+n) as i32
-				);*/
+				);
 		}
 	}
 
@@ -319,9 +319,9 @@ fn generate_sphere(edges: &mut Gmatrix, cx: f32, cy: f32, cz: f32, r: f32, step:
 	}
 }
 
-pub fn add_torus(edges: &mut Gmatrix, cx:f32, cy:f32, cz:f32, r1: f32, r2:f32) {
+pub fn add_torus(edges: &mut Gmatrix, cx:f32, cy:f32, cz:f32, r1: f32, r2:f32, step:f32) {
 	let mut torus = Gmatrix::new();
-	generate_torus(&mut torus,cx,cy,cz,r1,r2);
+	generate_torus(&mut torus,cx,cy,cz,r1,r2,step);
 	for i in 0..torus.clen() {
 		let x = torus.get_val(0,i) as i32;
 		let y = torus.get_val(1,i) as i32;
@@ -330,7 +330,7 @@ pub fn add_torus(edges: &mut Gmatrix, cx:f32, cy:f32, cz:f32, r1: f32, r2:f32) {
 	}
 }
 
-fn generate_torus(edges: &mut Gmatrix, cx:f32, cy:f32, cz:f32, r1: f32, r2:f32) {
+fn generate_torus(edges: &mut Gmatrix, cx:f32, cy:f32, cz:f32, r1: f32, r2:f32, step:f32) {
 	let mut rot = 0.0;
 	let mut mrot;
 	while rot<1.0 {
@@ -343,8 +343,8 @@ fn generate_torus(edges: &mut Gmatrix, cx:f32, cy:f32, cz:f32, r1: f32, r2:f32) 
 			let y = (r1*mcirc.sin() + cy) as i32;
 			let z = (-1.0 * mrot.sin() * (r1*mcirc.cos() + r2) + cz) as i32;
 			edges.add_edge(x,y,z,x+2,y+2,z+2);
-			circ += 0.01
+			circ += step;
 		}
-		rot += 0.01;
+		rot += step;
 	}
 }

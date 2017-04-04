@@ -247,7 +247,7 @@ pub fn add_box(edges: &mut Gmatrix, x:i32, y:i32, z:i32, w:i32, h:i32, d:i32) {
 
 pub fn add_sphere(edges: &mut Gmatrix, cx: f32, cy: f32, cz: f32, r: f32, step:f32) {
 	let mut circ = Gmatrix::new();
-	let mut n = (1.0/step) as usize;
+	let mut n = (1.0/step+0.1) as usize;
 	generate_sphere(&mut circ, cx, cy, cz, r, step);
 
 	let lat_start = 0;
@@ -276,7 +276,7 @@ pub fn add_sphere(edges: &mut Gmatrix, cx: f32, cy: f32, cz: f32, r: f32, step:f
 				circ.get_val(2,i+1+n) as i32
 				);
 
-/*			edges.add_tri(
+			edges.add_tri(
 				circ.get_val(0,i) as i32,
 				circ.get_val(1,i) as i32,
 				circ.get_val(2,i) as i32,
@@ -288,7 +288,7 @@ pub fn add_sphere(edges: &mut Gmatrix, cx: f32, cy: f32, cz: f32, r: f32, step:f
 				circ.get_val(0,i+n) as i32,
 				circ.get_val(1,i+n) as i32,
 				circ.get_val(2,i+n) as i32
-				);*/
+				);
 		}
 	}
 

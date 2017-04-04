@@ -235,8 +235,8 @@ pub fn add_box(edges: &mut Gmatrix, x:i32, y:i32, z:i32, w:i32, h:i32, d:i32) {
 	edges.add_tri(x,y,z, x,y,z-d, x,y-h,z-d);
 	edges.add_tri(x,y-h,z-d, x,y-h,z, x,y,z);
 	//RIGHT FACE
-	edges.add_tri(x+w,y,z, x+w,y,z-d, x+w,y-h,z-d);
-	edges.add_tri(x+w,y-h,z-d, x+w,y-h,z, x+w,y,z);
+	edges.add_tri(x+w,y,z-d, x+w,y,z, x+w,y-h,z);
+	edges.add_tri(x+w,y-h,z, x+w,y-h,z-d, x+w,y,z-d);
 	//TOP FACE
 	edges.add_tri(x+w,y,z-d, x,y,z-d, x,y,z);
 	edges.add_tri(x,y,z, x+w,y,z, x+w,y,z-d);

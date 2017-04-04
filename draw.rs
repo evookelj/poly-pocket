@@ -244,33 +244,76 @@ pub fn add_box(edges: &mut Gmatrix, x:i32, y:i32, z:i32, w:i32, h:i32, d:i32) {
 	edges.add_tri(x,y-h,z-d, x,y-h,z, x+w,y-h,z);
 }
 
-pub fn add_sphere(edges: &mut Gmatrix, cx: f32, cy: f32, cz: f32, r: f32) {
+pub fn add_sphere(edges: &mut Gmatrix, cx: f32, cy: f32, cz: f32, r: f32, step:f32) {
 	let mut circ = Gmatrix::new();
-	generate_sphere(&mut circ, cx, cy, cz, r);
-	for i in 0..circ.clen() {
-		let x = circ.get_val(0,i) as i32;
-		let y = circ.get_val(1,i) as i32;
-		let z = circ.get_val(2,i) as i32;
-		edges.add_edge(x,y,z,x+2,y+2,z+2);
+	let mut n = (1.0/step+0.1) as usize;
+	generate_sphere(&mut circ, cx, cy, cz, r, step);
+
+	let lat_start = 0;
+	let lat_stop = n;
+	let long_start = 0;
+	let long_stop = n;
+
+	n += 1;
+	for lat in lat_start..lat_stop {
+		for long in long_start..long_stop {
+			let i = lat*n+long;
+
+			edges.add_tri(
+				circ.get_val(0,i) as i32,
+				circ.get_val(1,i) as i32,
+				circ.get_val(2,i) as i32,
+
+				circ.get_val(0,i+1) as i32,
+				circ.get_val(1,i+1) as i32,
+				circ.get_val(2,i+1) as i32,
+
+				circ.get_val(0,i+1+n) as i32,
+				circ.get_val(1,i+1+n) as i32,
+				circ.get_val(2,i+1+n) as i32
+				);
+/*
+			edges.add_tri(
+				circ.get_val(0,i) as i32,
+				circ.get_val(1,i) as i32,
+				circ.get_val(2,i) as i32,
+
+				circ.get_val(0,i+1+n) as i32,
+				circ.get_val(1,i+1+n) as i32,
+				circ.get_val(2,i+1+n) as i32,
+
+				circ.get_val(0,i+n) as i32,
+				circ.get_val(1,i+n) as i32,
+				circ.get_val(2,i+n) as i32
+				);*/
+		}
 	}
+
 }
 
-fn generate_sphere(edges: &mut Gmatrix, cx: f32, cy: f32, cz: f32, r: f32) {
+fn generate_sphere(edges: &mut Gmatrix, cx: f32, cy: f32, cz: f32, r: f32, step: f32) {
 	let mut rot = 0.0;
 	let mut mrot;
-	while rot < 1.0 {
+	let mut big_ctr = 0;
+	let num_steps = (1.0/step) as i32;
+	println!("num_steps {}",num_steps );
+	while big_ctr <= num_steps {
 		let mut circ = 0.0;
 		let mut mcirc;
-		while circ < 1.0 {
+		let mut sm_ctr = 0;
+		while sm_ctr <= num_steps {
 			mrot = rot*2.0*PI;
 			mcirc = circ*PI;
 			let x = (r * mcirc.cos()+ cx) as i32;
 			let y = (r * mcirc.sin() * mrot.cos() + cy) as i32;
 			let z = (r * mcirc.sin() * mrot.sin() + cz) as i32;
 			edges.add_pt(x,y,z);
-			circ += 0.01
+			circ += step;
+			sm_ctr += 1;
 		}
-		rot += 0.01;
+		//println!("ctr {}", ctr);
+		rot += step;
+		big_ctr += 1;
 	}
 }
 

@@ -226,23 +226,23 @@ pub fn add_circle(edges: &mut Gmatrix, cx: f32, cy: f32, cz: f32, r: f32) {
 pub fn add_box(edges: &mut Gmatrix, x:i32, y:i32, z:i32, w:i32, h:i32, d:i32) {
 
 	//FRONT FACE
-	edges.add_tri(x+w,y,z, x,y,z, x,y-h,z);
-	edges.add_tri(x,y-h,z, x+w,y-h,z, x+w,y,z);
+	edges.add_tri(x,y,z, x,y-h,z, x+w,y-h,z);
+	edges.add_tri(x+w,y-h,z, x+w,y,z, x,y,z);
 	//BACK FACE
-	edges.add_tri(x+w,y,z-d, x,y,z-d, x,y-h,z-d);
-	edges.add_tri(x,y-h,z-d, x+w,y-h,z-d, x+w,y,z-d);
+	edges.add_tri(x,y,z-d, x,y-h,z-d, x+w,y-h,z-d);
+	edges.add_tri(x+w,y-h,z-d, x+w,y,z-d, x,y,z-d);
 	//LEFT FACE
-	edges.add_tri(x,y,z, x,y,z-d, x,y-h,z-d);
-	edges.add_tri(x,y-h,z-d, x,y-h,z, x,y,z);
+	edges.add_tri(x,y,z-d, x,y-h,z-d, x,y-h,z);
+	edges.add_tri(x,y-h,z, x,y,z, x,y,z-d);
 	//RIGHT FACE
-	edges.add_tri(x+w,y,z-d, x+w,y,z, x+w,y-h,z);
-	edges.add_tri(x+w,y-h,z, x+w,y-h,z-d, x+w,y,z-d);
+	edges.add_tri(x+w,y,z, x+w,y-h,z, x+w,y-h,z-d);
+	edges.add_tri(x+w,y-h,z-d, x+w,y,z-d, x+w,y,z);
 	//TOP FACE
-	edges.add_tri(x+w,y,z-d, x,y,z-d, x,y,z);
-	edges.add_tri(x,y,z, x+w,y,z, x+w,y,z-d);
+	edges.add_tri(x,y,z-d, x,y,z, x+w,y,z);
+	edges.add_tri(x+w,y,z, x+w,y,z-d, x,y,z-d);
 	//BOTTOM FACE
-	edges.add_tri(x+w,y-h,z-d, x,y-h,z-d, x,y-h,z);
-	edges.add_tri(x,y-h,z, x+w,y-h,z, x+w,y-h,z-d);
+	edges.add_tri(x,y-h,z-d, x,y-h,z, x+w,y-h,z);
+	edges.add_tri(x+w,y-h,z, x+w,y-h,z-d, x,y-h,z-d);
 }
 
 pub fn add_sphere(edges: &mut Gmatrix, cx: f32, cy: f32, cz: f32, r: f32, step:f32) {

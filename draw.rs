@@ -111,10 +111,25 @@ pub fn draw_lines(gm: &mut Gmatrix, screen: &mut [[[u32; 3]; 500]; 500], color: 
 	}
 }
 
-fn draw_tri(x0: i32, y0: i32, x1: i32, y1: i32, x2: i32, y2: i32, screen: &mut [[[u32; 3]; 500]; 500], color: [u32; 3]) {
-	draw_line(x0,y0,x1,y1,screen,color);
-	draw_line(x0,y0,x2,y2,screen,color);
-	draw_line(x1,y1,x2,y2,screen,color);
+fn draw_tri(x0:i32,y0:i32,z0:i32,x1:i32,y1:i32,z1:i32,x2:i32,y2:i32,z2:i32,screen: &mut [[[u32; 3]; 500]; 500], color: [u32; 3]) {
+	// BACKWARD CULLING HERE
+	let a = [x1-x0, y1-y0, z1-z0];
+	let b = [x2-x0, y2-y0, z2-z0];
+	let n = [a[1]*b[2]-a[2]*b[1],
+			a[2]*b[0]-a[0]*b[2],
+			a[0]*b[1]-a[1]*b[0]];
+	let v = [0,0,1];
+	let vn = (v[0]*n[0])+(v[1]*n[1])+(v[2]*n[2]);
+	let magn = (n[0]^2+n[1]^2+n[2]^2)^(1/2);
+	let magv = (v[0]*v[0]+v[1]*v[1]+v[2]*v[2])^(1/2);
+	let cost = (vn as f32)/((magn*magv) as f32);
+	let theta = cost.acos().to_degrees();
+
+	if (-90.0 < theta) && (90.0 > theta) {
+		draw_line(x0,y0,x1,y1,screen,color);
+		draw_line(x0,y0,x2,y2,screen,color);
+		draw_line(x1,y1,x2,y2,screen,color);
+	}
 }
 
 pub fn draw_tris(gm: &mut Gmatrix, screen: &mut [[[u32; 3]; 500]; 500], color: [u32; 3]) {
@@ -127,10 +142,13 @@ pub fn draw_tris(gm: &mut Gmatrix, screen: &mut [[[u32; 3]; 500]; 500], color: [
 		draw_tri(
 			gm.get_val(0,i) as i32,
 			gm.get_val(1,i) as i32,
+			gm.get_val(2,i) as i32,
 			gm.get_val(0,i+1) as i32,
 			gm.get_val(1,i+1) as i32,
+			gm.get_val(2,i+1) as i32,
 			gm.get_val(0,i+2) as i32,
 			gm.get_val(1,i+2) as i32,
+			gm.get_val(2,i+2) as i32,
 			screen,
 			color);
 		i+=3;

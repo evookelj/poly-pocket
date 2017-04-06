@@ -141,7 +141,7 @@ pub fn parse_file(name: &str, transf: &mut Gmatrix, edges: &mut Gmatrix, screen:
 					vec[2].parse().unwrap(), //cz
 					vec[3].parse().unwrap(), //r1
 					vec[4].parse().unwrap(), //r2
-					0.01
+					0.05
 					);
 				last = String::from("");
 			}

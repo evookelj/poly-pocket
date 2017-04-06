@@ -298,7 +298,6 @@ fn generate_sphere(edges: &mut Gmatrix, cx: f32, cy: f32, cz: f32, r: f32, step:
 	let mut mrot;
 	let mut big_ctr = 0;
 	let num_steps = (1.0/step) as i32;
-	println!("num_steps {}",num_steps );
 	while big_ctr <= num_steps {
 		let mut circ = 0.0;
 		let mut mcirc;
@@ -320,31 +319,71 @@ fn generate_sphere(edges: &mut Gmatrix, cx: f32, cy: f32, cz: f32, r: f32, step:
 }
 
 pub fn add_torus(edges: &mut Gmatrix, cx:f32, cy:f32, cz:f32, r1: f32, r2:f32, step:f32) {
-	let mut torus = Gmatrix::new();
-	generate_torus(&mut torus,cx,cy,cz,r1,r2,step);
-	for i in 0..torus.clen() {
-		let x = torus.get_val(0,i) as i32;
-		let y = torus.get_val(1,i) as i32;
-		let z = torus.get_val(2,i) as i32;
-		edges.add_edge(x,y,z,x+2,y+2,z+2);
+	let mut circ = Gmatrix::new();
+	let mut n = (1.0/step+0.1) as usize;
+	generate_torus(&mut circ, cx, cy, cz, r1, r2, step);
+
+	let lat_start = 0;
+	let lat_stop = n;
+	let long_start = 0;
+	let long_stop = n;
+
+	let mut i;
+	n+=1;
+
+	for lat in lat_start..lat_stop {
+		for long in long_start..long_stop {
+			i = lat*n+long;
+			edges.add_tri(
+				circ.get_val(0,i) as i32,
+				circ.get_val(1,i) as i32,
+				circ.get_val(2,i) as i32,
+
+				circ.get_val(0,i+1) as i32,
+				circ.get_val(1,i+1) as i32,
+				circ.get_val(2,i+1) as i32,
+
+				circ.get_val(0,i+1+n) as i32,
+				circ.get_val(1,i+1+n) as i32,
+				circ.get_val(2,i+1+n) as i32
+				);
+			edges.add_tri(
+				circ.get_val(0,i) as i32,
+				circ.get_val(1,i) as i32,
+				circ.get_val(2,i) as i32,
+
+				circ.get_val(0,i+1+n) as i32,
+				circ.get_val(1,i+1+n) as i32,
+				circ.get_val(2,i+1+n) as i32,
+
+				circ.get_val(0,i+n) as i32,
+				circ.get_val(1,i+n) as i32,
+				circ.get_val(2,i+n) as i32
+				);
+		}
 	}
 }
 
 fn generate_torus(edges: &mut Gmatrix, cx:f32, cy:f32, cz:f32, r1: f32, r2:f32, step:f32) {
 	let mut rot = 0.0;
 	let mut mrot;
-	while rot<1.0 {
+	let mut big_ctr = 0;
+	let num_steps = (1.0/step) as i32;
+	while big_ctr <= num_steps {
 		let mut circ = 0.0;
 		let mut mcirc;
-		while circ<1.0 {
+		let mut smal_ctr = 0;
+		while smal_ctr <= num_steps {
 			mrot = rot*2.0*PI;
 			mcirc = circ*2.0*PI;
 			let x = (mrot.cos() * ( mcirc.cos()*r1 + r2 ) + cx) as i32;
 			let y = (r1*mcirc.sin() + cy) as i32;
 			let z = (-1.0 * mrot.sin() * (r1*mcirc.cos() + r2) + cz) as i32;
-			edges.add_edge(x,y,z,x+2,y+2,z+2);
+			edges.add_pt(x,y,z);
 			circ += step;
+			smal_ctr += 1;
 		}
 		rot += step;
+		big_ctr+=1;
 	}
 }

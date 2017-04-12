@@ -14,7 +14,6 @@ use display::disp;
 use display::clear_screen;
 use display::save_ppm;
 
-use draw::draw_lines;
 use draw::draw_tris;
 use draw::add_curve;
 use draw::add_circle;
@@ -35,7 +34,7 @@ pub fn parse_file(name: &str, transf: &mut Gmatrix, edges: &mut Gmatrix, screen:
  		
 		match last.trim() {
 			"save" => {
-				draw_lines(edges, screen, [255,255,255]);
+				draw_tris(edges, screen, [255,255,255]);
 				println!("Saving as {}..", vec[0]);
 				save_ppm(screen, vec[0]);
 			 	clear_screen(screen);

@@ -94,6 +94,7 @@ fn draw_line(x0: i32, y0: i32, x1: i32, y1: i32, screen: &mut [[[u32; 3]; 500]; 
 	else { println!("Should never reach this"); }
 }
 
+#[allow(dead_code)]
 pub fn draw_lines(gm: &mut Gmatrix, screen: &mut [[[u32; 3]; 500]; 500], color: [u32; 3]) {
 	let mut i = 0;
 	if gm.clen()<1 { return; }
@@ -116,13 +117,6 @@ fn draw_tri(x0:i32,y0:i32,z0:i32,x1:i32,y1:i32,z1:i32,x2:i32,y2:i32,z2:i32,scree
 	let n = [(a[1]*b[2])-(a[2]*b[1]),
 			(a[2]*b[0])-(a[0]*b[2]),
 			(a[0]*b[1])-(a[1]*b[0])];
-			/*
-	let v = [0,0,1];
-	let vn = (v[0]*n[0])+(v[1]*n[1])+(v[2]*n[2]);
-	let magn = (n[0]^2+n[1]^2+n[2]^2)^(1/2);
-	let magv = (v[0]^2+v[1]^2+v[2]^2)^(1/2);
-	let cost = (vn as f32)/((magn*magv) as f32);
-	*/
 
 	if n[2]>0 {
 		draw_line(x0,y0,x1,y1,screen,color);

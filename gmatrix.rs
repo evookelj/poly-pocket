@@ -100,13 +100,12 @@ impl Gmatrix {
 		}
 		return ret;
 	}
-	
 
 	pub fn add_pt(&mut self, x0: i32, y0: i32, z0: i32) {
 		self.add_val(0, x0 as f32);
 		self.add_val(1, y0 as f32);
 		self.add_val(2, z0 as f32);
-		self.add_val(3,1.0);
+		self.add_val(3, 1.0);
 	}
 
 	pub fn add_edge(&mut self,x0:i32,y0:i32,z0:i32,x1:i32,y1:i32,z1:i32) {
@@ -116,9 +115,9 @@ impl Gmatrix {
 
 	pub fn add_tri(&mut self,x0:i32,y0:i32,z0:i32,
 		x1:i32,y1:i32,z1:i32,x2:i32,y2:i32,z2:i32) {
-		self.add_edge(x1,y1,z1,x2,y2,z2);
-		self.add_edge(x0,y0,z0,x2,y2,z2);
-		self.add_edge(x0,y0,z0,x1,y1,z1);
+		self.add_pt(x0,y0,z0);
+		self.add_pt(x1,y1,z1);
+		self.add_pt(x2,y2,z2);
 	}
 }
 

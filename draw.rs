@@ -117,7 +117,6 @@ fn draw_tri(x0:i32,y0:i32,z0:i32,x1:i32,y1:i32,z1:i32,x2:i32,y2:i32,z2:i32,scree
 	let n = [(a[1]*b[2])-(a[2]*b[1]),
 			(a[2]*b[0])-(a[0]*b[2]),
 			(a[0]*b[1])-(a[1]*b[0])];
-	println!("n[2] {}", n[2]);
 
 	if n[2]>0 {
 		draw_line(x0,y0,x1,y1,screen,color);

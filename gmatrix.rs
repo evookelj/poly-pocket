@@ -37,6 +37,7 @@ impl Gmatrix {
 		return self.data[0].len() as usize ;
 	}
 
+	#[allow(dead_code)]
 	pub fn print(&self) {
 		let mut fin = String::new();
 		for i in 0..self.rlen() {
@@ -89,7 +90,7 @@ impl Gmatrix {
 		}
 	}
 
-/*
+	#[allow(dead_code)]
 	pub fn s_mult(&self, s: f32) -> Gmatrix {
 		let mut ret = Gmatrix::new();
 		for r in 0..self.rlen() {
@@ -99,7 +100,7 @@ impl Gmatrix {
 		}
 		return ret;
 	}
-	*/
+	
 
 	pub fn add_pt(&mut self, x0: i32, y0: i32, z0: i32) {
 		self.add_val(0, x0 as f32);

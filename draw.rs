@@ -96,9 +96,8 @@ fn draw_line(x0: i32, y0: i32, x1: i32, y1: i32, screen: &mut [[[u32; 3]; 500]; 
 
 pub fn draw_lines(gm: &mut Gmatrix, screen: &mut [[[u32; 3]; 500]; 500], color: [u32; 3]) {
 	let mut i = 0;
-	if gm.clen()<1 {
-		return;
-	}
+	if gm.clen()<1 { return; }
+
 	while i<gm.clen()-1 {
 		draw_line(
 			gm.get_val(0,i) as i32, //x0 
@@ -112,20 +111,20 @@ pub fn draw_lines(gm: &mut Gmatrix, screen: &mut [[[u32; 3]; 500]; 500], color: 
 }
 
 fn draw_tri(x0:i32,y0:i32,z0:i32,x1:i32,y1:i32,z1:i32,x2:i32,y2:i32,z2:i32,screen: &mut [[[u32; 3]; 500]; 500], color: [u32; 3]) {
-	// BACKWARD CULLING HERE
 	let a = [x1-x0, y1-y0, z1-z0];
 	let b = [x2-x0, y2-y0, z2-z0];
-	let n = [a[1]*b[2]-a[2]*b[1],
-			a[2]*b[0]-a[0]*b[2],
-			a[0]*b[1]-a[1]*b[0]];
+	let n = [(a[1]*b[2])-(a[2]*b[1]),
+			(a[2]*b[0])-(a[0]*b[2]),
+			(a[0]*b[1])-(a[1]*b[0])];
+			/*
 	let v = [0,0,1];
 	let vn = (v[0]*n[0])+(v[1]*n[1])+(v[2]*n[2]);
 	let magn = (n[0]^2+n[1]^2+n[2]^2)^(1/2);
-	let magv = (v[0]*v[0]+v[1]*v[1]+v[2]*v[2])^(1/2);
+	let magv = (v[0]^2+v[1]^2+v[2]^2)^(1/2);
 	let cost = (vn as f32)/((magn*magv) as f32);
-	let theta = cost.acos().to_degrees();
+	*/
 
-	if (-90.0 < theta) && (90.0 > theta) {
+	if n[2]>0 {
 		draw_line(x0,y0,x1,y1,screen,color);
 		draw_line(x0,y0,x2,y2,screen,color);
 		draw_line(x1,y1,x2,y2,screen,color);
@@ -134,9 +133,7 @@ fn draw_tri(x0:i32,y0:i32,z0:i32,x1:i32,y1:i32,z1:i32,x2:i32,y2:i32,z2:i32,scree
 
 pub fn draw_tris(gm: &mut Gmatrix, screen: &mut [[[u32; 3]; 500]; 500], color: [u32; 3]) {
 	let mut i=0;
-	if gm.clen()<1 {
-		return;
-	}
+	if gm.clen()<1 { return; }
 
 	while i<gm.clen()-2 {
 		draw_tri(
@@ -170,12 +167,10 @@ fn curve_x(t: f32, cx: &Gmatrix) -> f32 {
 	let b = cx.get_val(1,0);
 	let c = cx.get_val(2,0);
 	let d = cx.get_val(3,0);
-	//println!("{}t^3+{}t^2+{}t+{}",a,b,c,d );
 	return a*t*t*t+b*t*t+c*t+d;
 }
 
 fn curve_y(t: f32, cy: &Gmatrix) -> f32 {
-	//println!("Y: ");
 	return curve_x(t, cy);
 }
 
@@ -202,7 +197,6 @@ fn paramet_curve(edges: &mut Gmatrix, cx: &Gmatrix, cy: &Gmatrix, fx: &Fn(f32,&G
 	while t <= 1.001 {
 		let x1 = fx(t,cx);
 		let y1 = fy(t,cy);
-		//println!("Adding edge {} {} to {} {}", x0,y0,x1,y1);
 		if t>0.0 { edges.add_edge(x0 as i32, y0 as i32, 0, x1 as i32, y1 as i32, 0); }
 		x0 = x1;
 		y0 = y1;
@@ -220,7 +214,6 @@ pub fn add_curve(edges: &mut Gmatrix, x0:f32,y0:f32,x1:f32,y1:f32,a5:f32,a6:f32,
 	givx.add_val(1,x1);
 	givx.add_val(2,a5);
 	givx.add_val(3,a7);
-	//givx rows: [x0, x1, rx0, rx1]
 
 	givy.add_val(0,y0);
 	givy.add_val(1,y1);
@@ -242,7 +235,6 @@ pub fn add_circle(edges: &mut Gmatrix, cx: f32, cy: f32, cz: f32, r: f32) {
 }
 
 pub fn add_box(edges: &mut Gmatrix, x:i32, y:i32, z:i32, w:i32, h:i32, d:i32) {
-
 	//FRONT FACE
 	edges.add_tri(x,y,z, x,y-h,z, x+w,y-h,z);
 	edges.add_tri(x+w,y-h,z, x+w,y,z, x,y,z);
@@ -330,7 +322,6 @@ fn generate_sphere(edges: &mut Gmatrix, cx: f32, cy: f32, cz: f32, r: f32, step:
 			circ += step;
 			sm_ctr += 1;
 		}
-		//println!("ctr {}", ctr);
 		rot += step;
 		big_ctr += 1;
 	}
